@@ -1,0 +1,58 @@
+# P1 — bounded long-session deterministic replay loop (merge-blocking per policy).
+name: long-session-regression
+on:
+  pull_request:
+    paths:
+      - "dsd/packages/clinical-runtime/**"
+      - "dsd/packages/replay-runtime/**"
+      - "dsd/package.json"
+      - "dsd/package-lock.json"
+      - ".github/workflows/long-session-regression.yml"
+  push:
+    branches: [main, master]
+    paths:
+      - "dsd/packages/clinical-runtime/**"
+      - "dsd/packages/replay-runtime/**"
+      - "dsd/package.json"
+      - "dsd/package-lock.json"
+
+defaults:
+  run:
+    working-directory: dsd
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  long-session-regression:
+    name: long-session-regression (P1)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: true
+      matrix:
+        node-version: [22.x]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: dsd/package-lock.json
+      - run: npm ci
+      - name: Queue stabilization gate (P1)
+        run: npm run test:gate:queue-stabilization 2>&1 | tee queue-stabilization-gate.log
+      - name: Long-session gate (no retries — deterministic)
+        run: npm run test:gate:long-session 2>&1 | tee long-session-gate.log
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: long-session-failure-${{ github.run_id }}
+          path: |
+            dsd/queue-stabilization-gate.log
+            dsd/long-session-gate.log
+          retention-days: 30

@@ -1,0 +1,1 @@
+{"version":3,"file":"scanContinuity.js","sourceRoot":"","sources":["../src/scanContinuity.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAEH,2EAA2E;AAC3E,MAAM,CAAC,MAAM,iBAAiB,GAAG,kBAAkB,CAAC;AACpD,MAAM,CAAC,MAAM,eAAe,GAAG,gBAAgB,CAAC;AAChD,MAAM,CAAC,MAAM,iBAAiB,GAAG,kBAAkB,CAAC;AAEpD,0EAA0E;AAC1E,MAAM,CAAC,MAAM,iBAAiB,GAAG,CAAC,mBAAmB,EAAE,kBAAkB,EAAE,gBAAgB,EAAE,aAAa,CAAU,CAAC"}

@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dsd.local/governance/evidence-bundle.schema.json",
+  "title": "DSD Release Evidence Bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "buildSha",
+    "ciRunId",
+    "failureModeReplayEvidence",
+    "generatedAt",
+    "hydrationParityEvidence",
+    "invariantVerificationSummary",
+    "queueFingerprint",
+    "releaseSurvivabilitySummary",
+    "replayHash",
+    "schemaId",
+    "schemaVersion",
+    "staleDegradedEvidence",
+    "syncVersionKeySamples"
+  ],
+  "properties": {
+    "schemaId": { "const": "dsd.evidence-bundle" },
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "buildSha": { "type": "string", "minLength": 4 },
+    "ciRunId": { "type": "string", "minLength": 1 },
+    "generatedAt": { "type": "string", "minLength": 10 },
+    "replayHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "queueFingerprint": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "syncVersionKeySamples": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" }
+    },
+    "invariantVerificationSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assertReplaySameQueueHashesOk",
+        "replayMismatchCount",
+        "verifyCriticalVisibilityInvariantOk",
+        "verifyCriticalVisibilityViolations",
+        "verifyDeterministicDoubleReplayOk"
+      ],
+      "properties": {
+        "verifyCriticalVisibilityInvariantOk": { "type": "boolean", "const": true },
+        "verifyCriticalVisibilityViolations": {
+          "type": "array",
+          "items": { "type": "string" },
+          "maxItems": 0
+        },
+        "verifyDeterministicDoubleReplayOk": { "type": "boolean", "const": true },
+        "assertReplaySameQueueHashesOk": { "type": "boolean", "const": true },
+        "replayMismatchCount": { "type": "integer", "const": 0 }
+      }
+    },
+    "staleDegradedEvidence": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["degradedBannerRequired", "degradedMode", "staleBannerRequired"],
+      "properties": {
+        "staleBannerRequired": { "type": "boolean" },
+        "degradedBannerRequired": { "type": "boolean" },
+        "degradedMode": { "type": "string" }
+      }
+    },
+    "hydrationParityEvidence": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["replayQueueEqualsLive"],
+      "properties": {
+        "note": { "type": "string" },
+        "replayQueueEqualsLive": { "type": "boolean", "const": true }
+      }
+    },
+    "failureModeReplayEvidence": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "releaseSurvivabilitySummary": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

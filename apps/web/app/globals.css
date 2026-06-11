@@ -1,0 +1,166 @@
+/* DSD clinical surface — single visual rhythm */
+:root {
+  --dsd-bg: #0a0f18;
+  --dsd-surface: #0f1623;
+  --dsd-elevated: #141c2c;
+  --dsd-border: #273449;
+  --dsd-text: #e8eefc;
+  --dsd-text-muted: rgba(232, 238, 252, 0.78);
+  --dsd-text-subtle: rgba(232, 238, 252, 0.68);
+  --dsd-focus: #7dd3fc;
+  --dsd-space-xs: 4px;
+  --dsd-space-sm: 8px;
+  --dsd-space-md: 12px;
+  --dsd-space-lg: 16px;
+  --dsd-space-xl: 24px;
+  --dsd-radius-md: 8px;
+  --dsd-radius-lg: 10px;
+  --dsd-font-sans: system-ui, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --dsd-row-opacity-ms: 160ms;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+  scroll-padding-top: 72px;
+}
+
+body.dsd-app {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--dsd-font-sans);
+  background: var(--dsd-bg);
+  color: var(--dsd-text);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: auto;
+}
+
+.dsd-page-shell {
+  min-width: 280px;
+  max-width: 100%;
+  padding-left: max(var(--dsd-space-lg), env(safe-area-inset-left));
+  padding-right: max(var(--dsd-space-lg), env(safe-area-inset-right));
+}
+
+/* Narrow terminal: stack KPIs and main columns (no inline override needed) */
+.dsd-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--dsd-space-md);
+}
+
+.dsd-main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.82fr);
+  gap: var(--dsd-space-xl);
+  align-items: start;
+}
+
+.dsd-queue-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--dsd-space-lg);
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .dsd-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+  .dsd-main-grid {
+    grid-template-columns: 1fr;
+  }
+  .dsd-queue-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Calm loading skeleton — no animation */
+.dsd-loading-root {
+  min-height: 55vh;
+}
+
+.dsd-skeleton-block {
+  margin-bottom: var(--dsd-space-xl);
+}
+
+.dsd-skeleton-bar {
+  height: 11px;
+  border-radius: 6px;
+  background: var(--dsd-elevated);
+  border: 1px solid var(--dsd-border);
+  margin-bottom: var(--dsd-space-sm);
+}
+
+.dsd-skeleton-bar--long {
+  width: 72%;
+}
+
+.dsd-skeleton-bar--medium {
+  width: 48%;
+}
+
+.dsd-skeleton-bar--short {
+  width: 28%;
+}
+
+.dsd-skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--dsd-space-md);
+}
+
+@media (max-width: 900px) {
+  .dsd-skeleton-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dsd-skeleton-card {
+  min-height: 88px;
+  border-radius: var(--dsd-radius-md);
+  background: var(--dsd-surface);
+  border: 1px solid var(--dsd-border);
+}
+
+/* Skip link — first tab stop → jump to queue (command flow) */
+.dsd-skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: var(--dsd-space-sm) var(--dsd-space-md);
+  background: var(--dsd-elevated);
+  color: var(--dsd-text);
+  border: 1px solid var(--dsd-focus);
+  border-radius: var(--dsd-radius-md);
+  font-size: 13px;
+  text-decoration: none;
+}
+.dsd-skip-link:focus {
+  left: var(--dsd-space-md);
+  top: var(--dsd-space-md);
+  outline: none;
+}
+
+.dsd-surface-focus:focus-visible,
+button.dsd-surface-focus:focus-visible,
+summary.dsd-surface-focus:focus-visible,
+a.dsd-surface-focus:focus-visible {
+  outline: 2px solid var(--dsd-focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dsd-row-opacity-ms: 0ms;
+  }
+  .dsd-motion-safe {
+    transition: none !important;
+  }
+}

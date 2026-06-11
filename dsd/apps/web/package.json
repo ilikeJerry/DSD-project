@@ -1,0 +1,24 @@
+{
+  "name": "@dsd/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3100",
+    "build": "next build",
+    "start": "next start -p 3100"
+  },
+  "dependencies": {
+    "@dsd/clinical-runtime": "file:../../packages/clinical-runtime",
+    "@dsd/replay-runtime": "file:../../packages/replay-runtime",
+    "@dsd/ui-safety": "file:../../packages/ui-safety",
+    "next": "^15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.7.2"
+  }
+}

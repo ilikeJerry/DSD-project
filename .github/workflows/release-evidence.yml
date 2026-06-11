@@ -1,0 +1,52 @@
+# P0 — immutable evidence bundle + integrity sidecar (release traceability).
+# Runs on main/master pushes (post-merge) and manual dispatch for promotion packs.
+name: release-evidence
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "dsd/**"
+      - ".github/workflows/release-evidence.yml"
+  workflow_dispatch: {}
+
+defaults:
+  run:
+    working-directory: dsd
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  release-evidence:
+    name: release-evidence (P0 artifact)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      matrix:
+        node-version: [22.x]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: dsd/package-lock.json
+      - run: npm ci
+      - name: Generate canonical evidence bundle
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: npm run evidence:bundle
+      - name: Upload immutable evidence (90d)
+        uses: actions/upload-artifact@v4
+        with:
+          name: dsd-evidence-bundle-${{ github.run_id }}
+          path: |
+            dsd/artifacts/release/evidence-bundle.json
+            dsd/artifacts/release/evidence-bundle.json.integrity.txt
+          retention-days: 90
+          if-no-files-found: error

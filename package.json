@@ -1,0 +1,27 @@
+{
+  "name": "dsd-monorepo",
+  "private": true,
+  "packageManager": "npm@10.9.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build -w @dsd/event-schema && npm run build -w @dsd/audit-runtime && npm run build -w @dsd/runtime-sync && npm run build -w @dsd/clinical-runtime && npm run build -w @dsd/replay-runtime && npm run build -w @dsd/ui-safety",
+    "typecheck": "npm run build",
+    "test": "npm run build -w @dsd/ui-safety && npm run test -w @dsd/clinical-runtime && npm run test -w @dsd/ui-safety",
+    "test:gate:replay": "npm run build && npm run test:gate:replay -w @dsd/clinical-runtime",
+    "test:gate:queue-stabilization": "npm run build && npm run test:gate:queue-stabilization -w @dsd/clinical-runtime",
+    "test:gate:long-session": "npm run build && npm run test:gate:long-session -w @dsd/clinical-runtime",
+    "test:gate:cross-panel": "npm run build && npm run test:gate:cross-panel -w @dsd/ui-safety",
+    "test:gate:stale-degraded": "npm run build && npm run test:gate:stale-degraded -w @dsd/ui-safety",
+    "test:gate:human-stable": "npm run build && npm run test:gate:human-stable -w @dsd/ui-safety",
+    "verify:projection-determinism": "npm run build && node scripts/assert-projection-determinism.mjs",
+    "evidence:bundle": "npm run build && node scripts/generate-evidence-bundle.mjs",
+    "web:dev": "npm run dev -w @dsd/web",
+    "web:build": "npm run build && npm run build -w @dsd/web"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

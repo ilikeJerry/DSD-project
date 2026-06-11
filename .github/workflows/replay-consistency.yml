@@ -1,0 +1,60 @@
+# P0 — merge/release blocking. Trust: replay/UI timeline consistency.
+# Forbidden: flaky retry-pass (no actions/retry on this job).
+# 8-axis: replay invariant; unverifiable release; replay evidence; N/A stale-only; CI blocks merge; rollback has hash; gap=advisory CI; clinical traceability.
+name: replay-consistency
+on:
+  pull_request:
+    paths:
+      - "dsd/packages/clinical-runtime/**"
+      - "dsd/packages/replay-runtime/**"
+      - "dsd/packages/event-schema/**"
+      - "dsd/package.json"
+      - "dsd/package-lock.json"
+      - ".github/workflows/replay-consistency.yml"
+  push:
+    branches: [main, master]
+    paths:
+      - "dsd/packages/clinical-runtime/**"
+      - "dsd/packages/replay-runtime/**"
+      - "dsd/packages/event-schema/**"
+      - "dsd/package.json"
+      - "dsd/package-lock.json"
+
+defaults:
+  run:
+    working-directory: dsd
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  replay-consistency:
+    name: replay-consistency (P0)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: true
+      matrix:
+        node-version: [22.x]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: dsd/package-lock.json
+      - name: Install
+        run: npm ci
+      - name: Replay consistency gate (no retries)
+        run: npm run test:gate:replay 2>&1 | tee replay-gate.log
+      - name: Upload gate log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: replay-consistency-failure-${{ github.run_id }}
+          path: dsd/replay-gate.log
+          retention-days: 30

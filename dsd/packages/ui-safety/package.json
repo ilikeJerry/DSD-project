@@ -1,0 +1,27 @@
+{
+  "name": "@dsd/ui-safety",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:gate:cross-panel": "vitest run tests/gates/cross-panel-consistency.gate.test.ts",
+    "test:gate:stale-degraded": "vitest run tests/gates/stale-degraded.gate.test.ts",
+    "test:gate:human-stable": "vitest run tests/humanStableUx.test.ts"
+  },
+  "dependencies": {
+    "@dsd/clinical-runtime": "file:../clinical-runtime"
+  },
+  "devDependencies": {
+    "vitest": "^3.0.5"
+  }
+}

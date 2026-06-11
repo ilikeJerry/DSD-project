@@ -1,0 +1,1 @@
+{"version":3,"file":"stale.js","sourceRoot":"","sources":["../src/stale.ts"],"names":[],"mappings":"AAAA;;;GAGG;AACH,OAAO,EAAE,wBAAwB,EAAE,uBAAuB,EAAE,MAAM,gBAAgB,CAAC;AAInF,MAAM,UAAU,kBAAkB,CAAC,KAAa;IAC9C,IAAI,KAAK,IAAI,wBAAwB;QAAE,OAAO,OAAO,CAAC;IACtD,IAAI,KAAK,IAAI,uBAAuB;QAAE,OAAO,MAAM,CAAC;IACpD,OAAO,OAAO,CAAC;AACjB,CAAC"}
